@@ -21,6 +21,9 @@ public class AStar{
 	{
 	}
 	
+	/*
+	 * Takes the map Jon created.
+	 */
 	public AStar(String[][] map, int mapsize)
 	{
 		this.mapsize = mapsize;
