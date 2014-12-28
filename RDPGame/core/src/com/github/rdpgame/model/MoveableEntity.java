@@ -74,7 +74,7 @@ public abstract class MoveableEntity extends Entity {
 		this.destVec = destVec;
 		if(!(map.getCollision()[(int)destVec.y][(int)destVec.x] == "wall")){
 			if(!(destVec.y == position.y && destVec.x == position.x)){
-				AStar a = new AStar(map.getCollision(), 100);
+				AStar a = new AStar(map.getCollision(), map.getHeight(), map.getWidth());
 				Point from = new Point((int)position.x, (int)position.y);
 				Point to = new Point((int)destVec.x, (int)destVec.y);
 				pPath = a.calculatePath(from, to);

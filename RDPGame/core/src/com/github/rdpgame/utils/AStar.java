@@ -10,7 +10,8 @@ public class AStar{
 	public PriorityQueue<PointWeighted> open;
 	public int[][] closed;
 	public String[][] collision;
-	public int mapsize = 20;
+	public int mapsizeX;
+	public int mapsizeY;
 	public PointWeighted curPoint = new PointWeighted(), 
 			destPoint = new PointWeighted(), 
 			startPoint = new PointWeighted();
@@ -24,9 +25,10 @@ public class AStar{
 	/*
 	 * Takes the map Jon created.
 	 */
-	public AStar(String[][] map, int mapsize)
+	public AStar(String[][] map, int mapsizeX, int mapsizeY)
 	{
-		this.mapsize = mapsize;
+		this.mapsizeX = mapsizeX;
+		this.mapsizeY = mapsizeY;
 		collision = map;
 	}
 	
@@ -36,7 +38,7 @@ public class AStar{
 			return null;
 		}
 		
-		closed = new int[mapsize][mapsize];
+		closed = new int[mapsizeX][mapsizeY];
 		dest = to;
 		startPoint.x = from.x;
 		startPoint.y = from.y;
@@ -48,11 +50,11 @@ public class AStar{
 		destPoint.weight = 0;
 		
 		curPoint = startPoint;
+
+		open = new PriorityQueue<PointWeighted>(mapsizeX * mapsizeY);	
 		
-		open = new PriorityQueue<PointWeighted>(1);	
-		
-		for(int i = 0; i < mapsize; i++)
-			for(int j = 0; j < mapsize; j++)
+		for(int i = 0; i < mapsizeX; i++)
+			for(int j = 0; j < mapsizeY; j++)
 				closed[i][j] = 0;
 		
 		generateNodes(from, startPoint);
@@ -98,7 +100,7 @@ public class AStar{
 		 * adding in the parent nodes weight for proper calculations
 		 * could possibly add in extra values for diagonal movement
 		 */
-		if(p.x+1 != mapsize && closed[p.x+1][p.y] == 0)
+		if(p.x+1 != mapsizeX && closed[p.x+1][p.y] == 0)
 			if(collision[p.y][p.x+1] != "wall")
 				open.add(new PointWeighted(p.x+1, p.y, new Point(p.x+1, p.y).distance(dest) + pw.weight, pw));
 
@@ -106,7 +108,7 @@ public class AStar{
 			if(collision[p.y][p.x-1] != "wall")
 				open.add(new PointWeighted(p.x-1, p.y, new Point(p.x-1, p.y).distance(dest) + pw.weight, pw));
 
-		if(p.y+1 != mapsize && closed[p.x][p.y+1] == 0)
+		if(p.y+1 != mapsizeY && closed[p.x][p.y+1] == 0)
 			if(collision[p.y+1][p.x] != "wall")
 				open.add(new PointWeighted(p.x, p.y+1, new Point(p.x, p.y+1).distance(dest) + pw.weight, pw));
 		
