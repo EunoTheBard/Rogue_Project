@@ -3,7 +3,7 @@ package com.github.rdpgame.utils;
 public class PointWeighted implements Comparable<PointWeighted>{
 	public int x;
 	public int y;
-	public double weight;
+	public int weight;
 	public PointWeighted parent;
 	public int totalCost;
 	
@@ -25,7 +25,7 @@ public class PointWeighted implements Comparable<PointWeighted>{
 		totalCost = 0;
 	}
 	
-	PointWeighted(int x, int y, double weight, int totalCost, PointWeighted parent)
+	PointWeighted(int x, int y, int weight, int totalCost, PointWeighted parent)
 	{
 		this.x = x;
 		this.y = y;

@@ -82,7 +82,7 @@ public class AStar{
 		 * element in the queue.
 		 */
 		int temp = 0;
-		do
+		for(;;)
 		{
 			temp++;
 			curPoint = open.poll();
@@ -90,20 +90,20 @@ public class AStar{
 			generateNodes(new Point(curPoint.x, curPoint.y));
 			
 			System.out.println("X:" + curPoint.x + " Y:" + curPoint.y + "  " + temp);
-
-		}
-		while((curPoint.x != to.x && curPoint.y != to.y) || !(open.isEmpty()));
-		
-		do
-		{
-			if(curPoint.parent == null)
+			
+			if((curPoint.x == to.x && curPoint.y == to.y) || (open.isEmpty()))
+			{
+				for(;;)
+				{
+					if(curPoint.parent == null)
+						break;
+					curPoint = openArray[curPoint.x][curPoint.y];
+					calcedPath.addPoint(new Point(curPoint.x, curPoint.y));
+					curPoint = curPoint.parent;
+				}
 				break;
-			curPoint = openArray[curPoint.x][curPoint.y];
-			calcedPath.addPoint(new Point(curPoint.x, curPoint.y));
-			curPoint = curPoint.parent;
+			}
 		}
-		while(curPoint.parent != null);
-		
 		return calcedPath;
 	}
 	
@@ -116,67 +116,82 @@ public class AStar{
 		 * could possibly add in extra values for diagonal movement
 		 */
 		if(p.x+1 != mapsizeX && closed[p.x+1][p.y] == 0)
-			if(collision[p.y][p.x+1] != "wall"){
+			if(collision[p.y][p.x+1] != "wall")
+			{
 				h = Math.abs(destPoint.x - (p.x+1)) + Math.abs(destPoint.y - p.y);
 				
 				if(checked[p.x+1][p.y] == 0)
 				{
-					openArray[p.x+1][p.y] = new PointWeighted(p.x+1, p.y, h, openArray[p.x][p.y].totalCost + h, openArray[p.x][p.y]);
+					openArray[p.x+1][p.y] = new PointWeighted(p.x+1, p.y, openArray[p.x][p.y].totalCost + h, openArray[p.x][p.y].totalCost + h, openArray[p.x][p.y]);
 					open.add(openArray[p.x+1][p.y]);
 					checked[p.x+1][p.y] = 1;
 				}
 				
-				if(openArray[p.x][p.y].totalCost > openArray[p.x+1][p.y].totalCost + h){
+				if(openArray[p.x][p.y].totalCost > openArray[p.x+1][p.y].totalCost + openArray[p.x+1][p.y].weight)
+				{
 					openArray[p.x][p.y].parent = openArray[p.x+1][p.y];
-					openArray[p.x][p.y].totalCost = openArray[p.x+1][p.y].totalCost + h;
+					openArray[p.x][p.y].totalCost = openArray[p.x+1][p.y].totalCost + openArray[p.x+1][p.y].weight;
 				}
+			}
+			else
+			{
+				openArray[p.x][p.y].totalCost++;
 			}
 		
 		if(p.x-1 != -1 && closed[p.x-1][p.y] == 0)
-			if(collision[p.y][p.x-1] != "wall"){
+			if(collision[p.y][p.x-1] != "wall")
+			{
 				h = Math.abs(destPoint.x - (p.x-1)) + Math.abs(destPoint.y - p.y);
 				
-				if(checked[p.x-1][p.y] == 0){
-					openArray[p.x-1][p.y] = new PointWeighted(p.x-1, p.y, h, openArray[p.x][p.y].totalCost + h, openArray[p.x][p.y]);
+				if(checked[p.x-1][p.y] == 0)
+				{
+					openArray[p.x-1][p.y] = new PointWeighted(p.x-1, p.y, openArray[p.x][p.y].totalCost + h, openArray[p.x][p.y].totalCost + h, openArray[p.x][p.y]);
 					open.add(openArray[p.x-1][p.y]);
 					checked[p.x-1][p.y] = 1;
 				}
 				
-				if(openArray[p.x][p.y].totalCost > openArray[p.x-1][p.y].totalCost + h){
+				if(openArray[p.x][p.y].totalCost > openArray[p.x-1][p.y].totalCost + openArray[p.x-1][p.y].weight)
+				{
 					openArray[p.x][p.y].parent = openArray[p.x-1][p.y];
-					openArray[p.x][p.y].totalCost = openArray[p.x-1][p.y].totalCost + h;
+					openArray[p.x][p.y].totalCost = openArray[p.x-1][p.y].totalCost + openArray[p.x-1][p.y].weight;
 				}
 			}
 
 		if(p.y+1 != mapsizeY && closed[p.x][p.y+1] == 0)
-			if(collision[p.y+1][p.x] != "wall"){
+			if(collision[p.y+1][p.x] != "wall")
+			{
 				h = Math.abs(destPoint.x - p.x) + Math.abs(destPoint.y - (p.y+1));
 				
-				if(checked[p.x][p.y+1] == 0){
-					openArray[p.x][p.y+1] = new PointWeighted(p.x, p.y+1, h, openArray[p.x][p.y].totalCost + h, openArray[p.x][p.y]);
+				if(checked[p.x][p.y+1] == 0)
+				{
+					openArray[p.x][p.y+1] = new PointWeighted(p.x, p.y+1, openArray[p.x][p.y].totalCost + h, openArray[p.x][p.y].totalCost + h, openArray[p.x][p.y]);
 					open.add(openArray[p.x][p.y+1]);
 					checked[p.x][p.y+1] = 1;
 				}
 				
-				if(openArray[p.x][p.y].totalCost > openArray[p.x][p.y+1].totalCost + h){
+				if(openArray[p.x][p.y].totalCost > openArray[p.x][p.y+1].totalCost + openArray[p.x][p.y+1].weight)
+				{
 					openArray[p.x][p.y].parent = openArray[p.x][p.y+1];
-					openArray[p.x][p.y].totalCost = openArray[p.x][p.y+1].totalCost + h;
+					openArray[p.x][p.y].totalCost = openArray[p.x][p.y+1].totalCost + openArray[p.x][p.y+1].weight;
 				}
 			}
 		
 		if(p.y-1 != -1 && closed[p.x][p.y-1] == 0)
-			if(collision[p.y-1][p.x] != "wall"){
+			if(collision[p.y-1][p.x] != "wall")
+			{
 					h = Math.abs(destPoint.x - p.x) + Math.abs(destPoint.y - (p.y-1));
 					
-				if(checked[p.x][p.y-1] == 0){
-					openArray[p.x][p.y-1] = new PointWeighted(p.x, p.y-1, h, openArray[p.x][p.y].totalCost + h, openArray[p.x][p.y]);
+				if(checked[p.x][p.y-1] == 0)
+				{
+					openArray[p.x][p.y-1] = new PointWeighted(p.x, p.y-1, openArray[p.x][p.y].totalCost + h, openArray[p.x][p.y].totalCost + h, openArray[p.x][p.y]);
 					open.add(openArray[p.x][p.y-1]);
 					checked[p.x][p.y-1] = 1;
 				}
 				
-				if(openArray[p.x][p.y].totalCost > openArray[p.x][p.y-1].totalCost + h){
+				if(openArray[p.x][p.y].totalCost > openArray[p.x][p.y-1].totalCost + openArray[p.x][p.y-1].weight)
+				{
 					openArray[p.x][p.y].parent = openArray[p.x][p.y-1];
-					openArray[p.x][p.y].totalCost = openArray[p.x][p.y-1].totalCost + h;
+					openArray[p.x][p.y].totalCost = openArray[p.x][p.y-1].totalCost + openArray[p.x][p.y-1].weight;
 				}
 			}
 	}
