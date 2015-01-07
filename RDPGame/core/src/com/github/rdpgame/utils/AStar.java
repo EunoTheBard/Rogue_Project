@@ -82,7 +82,7 @@ public class AStar{
 		 * element in the queue.
 		 */
 		int temp = 0;
-		for(;;)
+		do
 		{
 			temp++;
 			curPoint = open.poll();
@@ -90,20 +90,20 @@ public class AStar{
 			generateNodes(new Point(curPoint.x, curPoint.y));
 			
 			System.out.println("X:" + curPoint.x + " Y:" + curPoint.y + "  " + temp);
-			
-			if((curPoint.x == to.x && curPoint.y == to.y) || (open.isEmpty()))
-			{
-				for(;;)
-				{
-					if(curPoint.parent == null)
-						break;
-					curPoint = openArray[curPoint.x][curPoint.y];
-					calcedPath.addPoint(new Point(curPoint.x, curPoint.y));
-					curPoint = curPoint.parent;
-				}
-				break;
-			}
+
 		}
+		while((curPoint.x != to.x && curPoint.y != to.y) || !(open.isEmpty()));
+		
+		do
+		{
+			if(curPoint.parent == null)
+				break;
+			curPoint = openArray[curPoint.x][curPoint.y];
+			calcedPath.addPoint(new Point(curPoint.x, curPoint.y));
+			curPoint = curPoint.parent;
+		}
+		while(curPoint.parent != null);
+		
 		return calcedPath;
 	}
 	
