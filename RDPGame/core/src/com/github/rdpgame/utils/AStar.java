@@ -25,7 +25,7 @@ public class AStar{
 	}
 	
 	/*
-	 * Takes the map Jon created.
+	 * Reads in a 2-D map array
 	 */
 	public AStar(String[][] map, int mapsizeX, int mapsizeY)
 	{
@@ -34,12 +34,21 @@ public class AStar{
 		collision = map;
 	}
 	
+	/*
+	 * Main Astar method for pathfinding
+	 *
+	 * Returns the most efficient path
+	 */
 	public Path calculatePath(Point from, Point to)
 	{
 		if(collision[to.y][to.x] == "wall" || from == to){
 			return null;
 		}
 		
+		
+		/*
+		 * variable initilization for algorithm looping
+		 */
 		closed = new int[mapsizeX][mapsizeY];
 		checked = new int[mapsizeX][mapsizeY];
 		dest = to;
@@ -58,11 +67,15 @@ public class AStar{
 		open = new PriorityQueue<PointWeighted>(mapsizeX * mapsizeY);	
 		openArray = new PointWeighted[mapsizeX][mapsizeY];
 		
-		for(int i = 0; i < mapsizeX; i++)
+		/*
+		 * Initialize the closed and checked arrays values to 0
+		 */
+		for(int i = 0; i < mapsizeX; i++){
 			for(int j = 0; j < mapsizeY; j++){
 				closed[i][j] = 0;
 				checked[i][j] = 0;
 			}
+		}
 		
 		openArray[startPoint.x][startPoint.y] = startPoint;
 		generateNodes(from);
